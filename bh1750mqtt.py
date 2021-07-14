@@ -149,7 +149,6 @@ while True:
         if(bh1750_mode == 2):
             lux = sensor.measure_high_res2()
 
-        
         data = {'timestamp': bh1750_ts,
                 'lux': lux}
 
