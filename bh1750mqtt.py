@@ -149,8 +149,12 @@ while True:
         if(bh1750_mode == 2):
             lux = sensor.measure_high_res2()
 
-        log2stdout(bh1750_ts, lux)
-        log2file('lux', [bh1750_ts, lux])
+        
+        data = {'timestamp': bh1750_ts,
+                'lux': lux}
+
+        log2stdout(bh1750_ts, data)
+        log2file('recording', data)
         updateEssentialMqtt(lux)
         time.sleep(bh1750_refresh)
 
