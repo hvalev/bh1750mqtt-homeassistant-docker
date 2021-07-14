@@ -1,4 +1,3 @@
-
 #!/usr/bin/python3
 from datetime import datetime
 import time
@@ -42,6 +41,7 @@ bh1750_mqtt_chatter = str(os.getenv('mqtt_chatter', 'essential|ha|full')).lower(
 bh1750_logging_mode = str(os.getenv('logging', 'None')).lower()
 bh1750_sensor_tally = dict()
 
+
 ###############
 # Logging functions
 ###############
@@ -58,6 +58,7 @@ def log2file(filename, params):
 def log2stdout(timestamp, msg):
     if('log2stdout' in bh1750_logging_mode):
         print(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ'), str(msg))
+
 
 ###############
 # MQTT update functions
@@ -79,13 +80,14 @@ def registerWithHomeAssitant():
         client.publish('homeassistant/sensor/'+mqtt_device_id+'Illuminance/config', ha_illuminance_config, qos=1, retain=True)
         log2stdout(datetime.now().timestamp(), 'Registering sensor with home assistant success...')
 
+
 ###############
 # Setup bh1750 sensor
 ###############
 log2stdout(bh1750_start_ts.timestamp(), 'Starting bh1750mqtt...')
 sensor = None
 try:
-    #bus = smbus.SMBus(0) # Rev 1 Pi uses 0
+    # bus = smbus.SMBus(0) # Rev 1 Pi uses 0
     bus = smbus.SMBus(bh1750_bus)  # Rev 2 Pi uses 1
     sensor = BH1750(bus, bh1750_addr)
     sensitivity = bh1750_sens % 255
@@ -146,15 +148,15 @@ while True:
             lux = sensor.measure_high_res()
         if(bh1750_mode == 2):
             lux = sensor.measure_high_res2()
-        
+
         log2stdout(bh1750_ts, lux)
-        log2file('lux', [bh1750_ts,lux])
+        log2file('lux', [bh1750_ts, lux])
         updateEssentialMqtt(lux)
         time.sleep(bh1750_refresh)
 
     except RuntimeError as error:
         detected = 'error'
-        
+
         data = {'timestamp': bh1750_ts, 'error_type': error.args[0]}
         log2stdout(bh1750_ts, data)
         log2file('error', data)
@@ -166,10 +168,3 @@ while True:
         if('essential' in bh1750_mqtt_chatter):
             client.disconnect()
         raise error
-
-# Graceful exit
-if('essential' in dht22mqtt_mqtt_chatter):
-    client.publish(mqtt_topic + "state", "OFFLINE", qos=2, retain=True)
-    client.publish(mqtt_topic + "updated", str(datetime.now()), qos=2, retain=True)
-    client.disconnect()
-dhtDevice.exit()

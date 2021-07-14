@@ -4,12 +4,13 @@
 
 import time
 
+
 class BH1750():
     """ Implement BH1750 communication. """
     # Define some constants from the datasheet
-    POWER_DOWN = 0x00 # No active state
-    POWER_ON   = 0x01 # Power on
-    RESET      = 0x07 # Reset data register value
+    POWER_DOWN = 0x00  # No active state
+    POWER_ON = 0x01  # Power on
+    RESET = 0x07  # Reset data register value
     # Start measurement at 4lx resolution. Time typically 16ms.
     CONTINUOUS_LOW_RES_MODE = 0x13
     # Start measurement at 1lx resolution. Time typically 120ms
@@ -43,7 +44,7 @@ class BH1750():
         self._set_mode(self.POWER_ON)
 
     def reset(self):
-        self.power_on() #It has to be powered on before resetting
+        self.power_on()  # It has to be powered on before resetting
         self._set_mode(self.RESET)
 
     def cont_low_res(self):
@@ -80,10 +81,10 @@ class BH1750():
         self.power_down()
 
     def get_result(self):
-        """ Return current measurement result in lx. """   
+        """ Return current measurement result in lx. """
         data = self.bus.read_word_data(self.addr, self.mode)
-        count = data >> 8 | (data&0xff)<<8
-        mode2coeff =  2 if (self.mode & 0x03) == 0x01 else 1
+        count = data >> 8 | (data & 0xff) << 8
+        mode2coeff = 2 if (self.mode & 0x03) == 0x01 else 1
         ratio = 1/(1.2 * (self.mtreg/69.0) * mode2coeff)
         return ratio*count
 
@@ -92,7 +93,7 @@ class BH1750():
         time.sleep(basetime * (self.mtreg/69.0) + additional)
 
     def do_measurement(self, mode, additional_delay=0):
-        """ 
+        """
         Perform complete measurement using command
         specified by parameter mode with additional
         delay specified in parameter additional_delay.
