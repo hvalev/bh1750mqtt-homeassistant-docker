@@ -75,7 +75,7 @@ def registerWithHomeAssitant():
         ha_illuminance_config = '{"device_class": "illuminance",' + \
                                 ' "name": "'+mqtt_device_id+'_illuminance",' + \
                                 ' "state_topic": "'+mqtt_topic+'value",' + \
-                                ' "unit_of_measurement": "°'+bh1750_unit+'",' + \
+                                ' "unit_of_measurement": "'+bh1750_unit+'",' + \
                                 ' "value_template": "{{ value_json.illuminance}}" }'
         client.publish('homeassistant/sensor/'+mqtt_device_id+'Illuminance/config', ha_illuminance_config, qos=1, retain=True)
         log2stdout(datetime.now().timestamp(), 'Registering sensor with home assistant success...')
