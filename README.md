@@ -3,7 +3,7 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/hvalev/bh1750mqtt-homeassistant)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hvalev/bh1750mqtt-homeassistant)
 
-This docker container enables you to use the BH1750 illuminance sensor on a GPIO enabled device such as raspberry pi. This container can communicate with an MQTT broker and relay the sensors' values in addition to integrating with home assistants' [auto-discovery](https://www.home-assistant.io/docs/mqtt/discovery/) protocol. Discovery will automatically detect the sensor and make it available for visualizations, automations, etc within your home assistant instance.
+This docker container enables you to use the BH1750 illuminance sensor on a GPIO enabled device such as raspberry pi. This container can communicate with an MQTT broker and relay the sensors' values in addition to integrating with home assistants' [discovery](https://www.home-assistant.io/docs/mqtt/discovery/) protocol. Discovery will automatically detect the sensor and make it available for visualizations, automations, etc within your home assistant instance.
 
 ## How to run it
 The following docker run command or docker-compose service will get you up and running with the minimal configuration.
