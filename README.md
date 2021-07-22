@@ -21,7 +21,7 @@ services:
       - device_id=bh1750
       - broker=192.168.X.X
 ```
-```/dev/gpiomem:/dev/gpiomem``` is required to access the GPIO and communicate with your DHT22 sensor. If it doesn't work, you can try to run the container in priviledged mode ```priviledged:true```.
+```/dev/i2c-1:/dev/i2c-1``` is required to access the Inter-Integrated Circuit bus and communicate with your BH1750 sensor. If it doesn't work, you can try to run the container in priviledged mode ```priviledged:true```.
 
 ## Parameters
 The container offers the following configurable environment variables:</br>
