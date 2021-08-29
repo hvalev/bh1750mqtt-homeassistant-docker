@@ -43,8 +43,11 @@ The container offers the following configurable environment variables:</br>
 ----------------------------------
 
 *If you end up using ```log2file```, make sure to add this volume in your docker run or docker-compose commands ```- ~/yourfolderpath:/log``` to be able to access the logs from your host os.* </br> 
+
 *If you want to run this container to simply record values to files with no MQTT integration, you need to explicitly set ```mqtt_chatter``` to a blank string. In that case, you can also omit all MQTT related parameters from your docker run or compose configurations.* </br>
-*If you're using this container for multiple sensors on the same or different devices which, however, connect to the same mqtt network, you need to explicitly pick a unique ```device_id``` for each. Otherwise, identically named devices will boot each other off the network each time they transmit a reading* </br>
+
+*If you're using this container for multiple sensors on the same or different devices which, however, connect to the same mqtt network, you need to explicitly pick a unique ```device_id``` for each. Otherwise, identically named devices will boot each other off the network each time they transmit a reading.* </br>
+
 *I have noticed that using ```measure_high_res2``` for sensor measurement ```mode``` sometimes produces 0 lux measurements. Some sort of filtering may be required if you opt for it.*
 
 ## Connecting your sensor 

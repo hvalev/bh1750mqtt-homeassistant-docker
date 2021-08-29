@@ -4,8 +4,8 @@ on:
     paths-ignore:
     - 'README.md'
     tags-ignore:
-      - '**'
-      
+    - '**'
+
 jobs:
   test:
     name: Lint test
