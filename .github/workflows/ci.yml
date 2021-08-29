@@ -2,9 +2,9 @@ name: ci
 on:
   push:
     paths-ignore:
-    - 'README.md'
-    tags-ignore:
-    - '**'
+      - 'README.md'
+    branches:
+      - '**'
 
 jobs:
   test:
