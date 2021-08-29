@@ -1,5 +1,5 @@
 # bh1750 illuminance sensor in a docker container
-[![build](https://github.com/hvalev/bh1750mqtt-homeassistant-docker/actions/workflows/main.yml/badge.svg)](https://github.com/hvalev/bh1750mqtt-homeassistant-docker/actions/workflows/main.yml)
+[![build](https://github.com/hvalev/bh1750mqtt-homeassistant-docker/actions/workflows/main.yml/badge.svg)](https://github.com/hvalev/bh1750mqtt-homeassistant-docker/actions/workflows/build.yml)
 ![Docker Pulls](https://img.shields.io/docker/pulls/hvalev/bh1750mqtt-homeassistant)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/hvalev/bh1750mqtt-homeassistant)
 
