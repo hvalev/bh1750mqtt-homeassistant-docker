@@ -97,7 +97,7 @@ try:
     bus = smbus.SMBus(bh1750_bus)  # Rev 2 Pi uses 1
     sensor = BH1750(bus, bh1750_addr)
     sensitivity = bh1750_sens % 255
-    log2stdout(datetime.now().timestamp(), 'Setting sensor sensitivity to '+str(sensitivity)+' and address to '+str(bh1750_addr), 'info')
+    log2stdout(datetime.now().timestamp(), 'Setting sensitivity to '+str(sensitivity)+' & address to '+str(bh1750_addr), 'info')
     sensor.set_sensitivity(sensitivity)
 except Exception as error:
     log2stdout(datetime.now().timestamp(), 'Unsupported device...', 'error')
