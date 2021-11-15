@@ -5,6 +5,7 @@ import os
 import csv
 import paho.mqtt.client as mqtt
 import smbus
+import logging
 from bh1750 import BH1750
 
 # Begin
@@ -55,9 +56,14 @@ def log2file(filename, params):
             w.writerow(params)
 
 
-def log2stdout(timestamp, msg):
+def log2stdout(timestamp, msg, type):
     if('log2stdout' in bh1750_logging_mode):
-        print(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ'), str(msg))
+        if type == 'info':
+            logging.info(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ')+' '+str(msg))
+        if type == 'warning':
+            logging.warning(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ')+' '+str(msg))
+        if type == 'error':
+            logging.error(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ')+' '+str(msg))
 
 
 ###############
@@ -78,27 +84,27 @@ def registerWithHomeAssitant():
                                 ' "unit_of_measurement": "'+bh1750_unit+'",' + \
                                 ' "value_template": "{{ value_json.illuminance}}" }'
         client.publish('homeassistant/sensor/'+mqtt_device_id+'Illuminance/config', ha_illuminance_config, qos=1, retain=True)
-        log2stdout(datetime.now().timestamp(), 'Registering sensor with home assistant success...')
+        log2stdout(datetime.now().timestamp(), 'Registering sensor with home assistant success...', 'info')
 
 
 ###############
 # Setup bh1750 sensor
 ###############
-log2stdout(bh1750_start_ts.timestamp(), 'Starting bh1750mqtt...')
+log2stdout(bh1750_start_ts.timestamp(), 'Starting bh1750mqtt...', 'info')
 sensor = None
 try:
     # bus = smbus.SMBus(0) # Rev 1 Pi uses 0
     bus = smbus.SMBus(bh1750_bus)  # Rev 2 Pi uses 1
     sensor = BH1750(bus, bh1750_addr)
     sensitivity = bh1750_sens % 255
-    log2stdout(datetime.now().timestamp(), 'Setting sensor sensitivity to '+str(sensitivity)+' and address to '+str(bh1750_addr))
+    log2stdout(datetime.now().timestamp(), 'Setting sensor sensitivity to '+str(sensitivity)+' and address to '+str(bh1750_addr), 'info')
     sensor.set_sensitivity(sensitivity)
 except Exception as error:
-    log2stdout(datetime.now().timestamp(), 'Unsupported device...')
-    log2stdout(datetime.now().timestamp(), 'Device supported by this container is the BH1750 sensor')
+    log2stdout(datetime.now().timestamp(), 'Unsupported device...', 'error')
+    log2stdout(datetime.now().timestamp(), 'Device supported by this container is the BH1750 sensor', 'error')
     raise error
 
-log2stdout(datetime.now().timestamp(), 'Setup bh1750 sensor success...')
+log2stdout(datetime.now().timestamp(), 'Setup bh1750 sensor success...', 'info')
 
 ###############
 # Setup mqtt client
@@ -129,13 +135,13 @@ if('essential' in bh1750_mqtt_chatter):
 
     client.publish(mqtt_topic + "updated", str(datetime.now()), qos=1, retain=True)
 
-    log2stdout(datetime.now().timestamp(), 'Setup mqtt client success...')
+    log2stdout(datetime.now().timestamp(), 'Setup mqtt client success...', 'info')
 
     client.publish(mqtt_topic + "state", "ONLINE", qos=1, retain=True)
 
     registerWithHomeAssitant()
 
-log2stdout(datetime.now().timestamp(), 'Begin capture...')
+log2stdout(datetime.now().timestamp(), 'Begin capture...', 'info')
 
 
 while True:
@@ -152,7 +158,7 @@ while True:
         data = {'timestamp': bh1750_ts,
                 'lux': lux}
 
-        log2stdout(bh1750_ts, data)
+        log2stdout(bh1750_ts, data, 'info')
         log2file('recording', data)
         updateEssentialMqtt(lux)
         time.sleep(bh1750_refresh)
@@ -161,7 +167,7 @@ while True:
         detected = 'error'
 
         data = {'timestamp': bh1750_ts, 'error_type': error.args[0]}
-        log2stdout(bh1750_ts, data)
+        log2stdout(bh1750_ts, data, 'warning')
         log2file('error', data)
 
         time.sleep(bh1750_refresh)
