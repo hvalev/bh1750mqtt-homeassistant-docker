@@ -47,7 +47,7 @@ bh1750_sensor_tally = dict()
 # Logging functions
 ###############
 def log2file(filename, params):
-    if('log2file' in bh1750_logging_mode):
+    if 'log2file' in bh1750_logging_mode:
         ts_filename = bh1750_start_ts.strftime('%Y-%m-%dT%H-%M-%SZ')+'_'+filename+".csv"
         with open("/log/"+ts_filename, "a+") as file:
             w = csv.DictWriter(file, delimiter=',', lineterminator='\n', fieldnames=params.keys())
@@ -57,7 +57,7 @@ def log2file(filename, params):
 
 
 def log2stdout(timestamp, msg, type):
-    if('log2stdout' in bh1750_logging_mode):
+    if 'log2stdout' in bh1750_logging_mode:
         if type == 'info':
             logging.info(datetime.fromtimestamp(timestamp).strftime('%Y-%m-%dT%H:%M:%SZ')+' '+str(msg))
         if type == 'warning':
@@ -70,14 +70,14 @@ def log2stdout(timestamp, msg, type):
 # MQTT update functions
 ###############
 def updateEssentialMqtt(illumination):
-    if('essential' in bh1750_mqtt_chatter):
+    if 'essential' in bh1750_mqtt_chatter:
         payload = '{ "illuminance": '+str(illumination)+' }'
         client.publish(mqtt_topic + 'value', payload, qos=1, retain=True)
         client.publish(mqtt_topic + "updated", str(datetime.now()), qos=1, retain=True)
 
 
 def registerWithHomeAssitant():
-    if('ha' in bh1750_mqtt_chatter):
+    if 'ha' in bh1750_mqtt_chatter:
         ha_illuminance_config = '{"device_class": "illuminance",' + \
                                 ' "name": "'+mqtt_device_id+'_illuminance",' + \
                                 ' "state_topic": "'+mqtt_topic+'value",' + \
@@ -109,7 +109,7 @@ log2stdout(datetime.now().timestamp(), 'Setup bh1750 sensor success...', 'info')
 ###############
 # Setup mqtt client
 ###############
-if('essential' in bh1750_mqtt_chatter):
+if 'essential' in bh1750_mqtt_chatter:
     client = mqtt.Client(mqtt_device_id, clean_session=True, userdata=None)
 
     if mqtt_username:
@@ -126,7 +126,7 @@ if('essential' in bh1750_mqtt_chatter):
     client.publish(mqtt_topic + "type", "sensor", qos=1, retain=True)
     client.publish(mqtt_topic + "device", "bh1750", qos=1, retain=True)
 
-    if('full' in bh1750_mqtt_chatter):
+    if 'full' in bh1750_mqtt_chatter:
         client.publish(mqtt_topic + "env/brokeraddr", mqtt_brokeraddr, qos=1, retain=True)
         client.publish(mqtt_topic + "env/username", mqtt_username, qos=1, retain=True)
         client.publish(mqtt_topic + "env/refresh", bh1750_refresh, qos=1, retain=True)
@@ -148,11 +148,11 @@ while True:
     try:
         bh1750_ts = datetime.now().timestamp()
 
-        if(bh1750_mode == 0):
+        if bh1750_mode == 0:
             lux = sensor.measure_low_res()
-        if(bh1750_mode == 1):
+        if bh1750_mode == 1:
             lux = sensor.measure_high_res()
-        if(bh1750_mode == 2):
+        if bh1750_mode == 2:
             lux = sensor.measure_high_res2()
 
         data = {'timestamp': bh1750_ts,
@@ -174,6 +174,6 @@ while True:
         continue
 
     except Exception as error:
-        if('essential' in bh1750_mqtt_chatter):
+        if 'essential' in bh1750_mqtt_chatter:
             client.disconnect()
         raise error
